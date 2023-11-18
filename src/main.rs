@@ -4,15 +4,19 @@
 use uefi::prelude::*;
 use uefi_services::*;
 use uefi::proto::console::text::*;
-use ansi_rgb::*;
+use uefi::*;
 
 #[entry]
 fn main(_image_handle: Handle, mut system_table: SystemTable<Boot>) -> Status {
     uefi_services::init(&mut system_table).unwrap();
-
+    
     init_console(system_table.stdout());
 
-    println!("Hello world!");
+    println!("Hello world!\n");
+
+    // let mut bootsrvices = system_table.boot_services();
+
+    // read_keyboard_events(&mut bootsrvices, system_table.stdin());
 
     system_table.boot_services().stall(10_000_000);
 
@@ -31,4 +35,32 @@ pub fn init_console(stdout: &mut Output) {
         .expect("Failed to change console color");
 
     stdout.clear().expect("Failed to clear screen");
+}
+
+fn read_keyboard_events(boot_services: &BootServices, input: &mut Input) -> Result {
+    loop {
+        // Pause until a keyboard event occurs.
+        let mut events = unsafe { [input.wait_for_key_event().unwrap()] };
+        boot_services
+            .wait_for_event(&mut events)
+            .discard_errdata()?;
+
+        let u_key = Char16::try_from('u').unwrap();
+        match input.read_key()? {
+            // Example of handling a printable key: print a message when
+            // the 'u' key is pressed.
+            Some(Key::Printable(key)) if key == u_key => {
+                println!("the 'u' key was pressed");
+            }
+
+            // Example of handling a special key: exit the loop when the
+            // escape key is pressed.
+            Some(Key::Special(ScanCode::ESCAPE)) => {
+                break;
+            }
+            _ => {}
+        }
+    }
+
+    Ok(())
 }
