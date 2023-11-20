@@ -14,9 +14,7 @@ fn main(_image_handle: Handle, mut system_table: SystemTable<Boot>) -> Status {
 
     println!("Hello world!\n");
 
-    // let mut bootsrvices = system_table.boot_services();
-
-    // read_keyboard_events(&mut bootsrvices, system_table.stdin());
+    read_keyboard_events(&mut system_table.boot_services(), &mut system_table.stdin());
 
     system_table.boot_services().stall(10_000_000);
 
