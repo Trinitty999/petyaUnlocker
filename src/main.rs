@@ -35,7 +35,7 @@ pub fn init_console(stdout: &mut Output) {
     stdout.clear().expect("Failed to clear screen");
 }
 
-fn read_keyboard_events(boot_services: &BootServices, input: &mut Input) -> Result {
+fn read_keyboard_events(boot_services: &mut BootServices, input: &mut Input) -> Result {
     loop {
         // Pause until a keyboard event occurs.
         let mut events = unsafe { [input.wait_for_key_event().unwrap()] };
