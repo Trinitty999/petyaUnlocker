@@ -3,6 +3,7 @@
 
 use uefi::prelude::*;
 use uefi_services::*;
+use uefi::table::boot::*;
 use uefi::proto::console::text::*;
 use uefi::*;
 
@@ -14,7 +15,11 @@ fn main(_image_handle: Handle, mut system_table: SystemTable<Boot>) -> Status {
 
     println!("Hello world!\n");
 
-    read_keyboard_events(&mut system_table.boot_services(), &mut system_table.stdin());
+    let mut bootservices = BootSer;
+
+    let mut stdin = system_table.stdin();
+
+    read_keyboard_events(&bootservices, &mut stdin);
 
     system_table.boot_services().stall(10_000_000);
 
