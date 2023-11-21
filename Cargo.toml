@@ -6,8 +6,5 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-ansi_rgb = "0.2.0"
+disk-types = "0.1.5"
 log = "0.4.20"
-scopeguard = "1.2.0"
-uefi = "0.26.0"
-uefi-services = "0.23.0"
