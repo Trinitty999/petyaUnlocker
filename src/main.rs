@@ -1,10 +1,5 @@
-use crossterm::*;
-use crossterm::style::*;
-use crossterm::terminal::*;
-use crossterm::cursor::*;
-use crossterm::event::*;
 use libparted::*;
-
+use colored::*;
 use std::io::*;
 use std::process;
 
@@ -12,8 +7,6 @@ fn list() -> Result<()> {
     for (dev_i, mut device) in Device::devices(true).enumerate() {
         let hw_geom = device.hw_geom();
         let bios_geom = device.bios_geom();
-        
-        style::SetForegroundColor(style::Color::Cyan);
 
         println!("Device {}", dev_i);
         println!("    Model:         {:?}", device.model());
@@ -50,7 +43,7 @@ fn list() -> Result<()> {
             println!("        FS:        {:?}", part.fs_type_name());
             println!("        Start:     {}", part.geom_start());
             println!("        End:       {}", part.geom_end());
-            println!("        Length:    {}", part.geom_length());
+            println!("        Length:    {}".bold(), part.geom_length());
         }
     }
     
@@ -59,15 +52,13 @@ fn list() -> Result<()> {
 }
 
 fn main() -> Result<()> {
-    execute!(
-        stdout(),
-        style::SetAttribute(style::Attribute::Bold),
-        terminal::Clear(terminal::ClearType::All),
-        SetForegroundColor(Color::Cyan),
-        terminal::SetTitle("Petya Unlocker"),
-        Print("Test.\n")
-    )?;
     list();
-    
+    print!("test".red);
+    print!("Press Enter to exit.\n");
+
+    let mut inp = String::new();
+
+    stdin().read_line(&mut inp);
+
     Ok(())
 }
